@@ -1,0 +1,9 @@
+# Игнорируем абсолютно всё
+*
+
+!.gitignore
+
+!Source/
+!Source/**
+
+!*.uproject
