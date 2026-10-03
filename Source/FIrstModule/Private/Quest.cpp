@@ -56,7 +56,7 @@ void AQuest::UpdateStartStatus()
 			return;
 		}
 	}
-	QuestStatus = EQuestStatus::Started;
+	SetQuestStatus(EQuestStatus::Started);
 
 	for (const TSubclassOf<UQuestCondition>& ConditionTemplate : QuestSettings->StartConditions)
 	{
@@ -85,5 +85,16 @@ void AQuest::UpdateEndStatus()
 			return;
 		}
 	}
-	QuestStatus = EQuestStatus::Completed;
+	SetQuestStatus(EQuestStatus::Completed);
+}
+
+void AQuest::SetQuestStatus(EQuestStatus NewStatus)
+{
+	if (QuestStatus == NewStatus)
+	{
+		return;
+	}
+	const EQuestStatus OldStatus = QuestStatus;
+	QuestStatus = NewStatus;
+	OnQuestStatusChanged.Broadcast(OldStatus, NewStatus);
 }

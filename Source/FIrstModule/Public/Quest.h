@@ -16,8 +16,8 @@ enum class EQuestStatus : uint8
 	Started,
 	Completed
 };
-
-UCLASS(Abstract)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestStatusChanged, EQuestStatus, OldStatus, EQuestStatus, NewStatus);
+UCLASS()
 class FIRSTMODULE_API AQuest : public AActor
 {
 	GENERATED_BODY()
@@ -28,9 +28,13 @@ public:
 	void UpdateStartStatus();
 	void UpdateEndStatus();
 	EQuestStatus GetQuestStatus() const { return QuestStatus; }
+
+	UPROPERTY(BlueprintAssignable)
+	FOnQuestStatusChanged OnQuestStatusChanged;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	void SetQuestStatus(EQuestStatus NewStatus);
 
 public:
 	// Called every frame

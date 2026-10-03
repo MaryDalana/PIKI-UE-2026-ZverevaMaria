@@ -9,7 +9,7 @@
 /**
  *
  */
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, BlueprintType)
 class FIRSTMODULE_API UEmptyQuestCondition : public UQuestCondition
 {
 	GENERATED_BODY()

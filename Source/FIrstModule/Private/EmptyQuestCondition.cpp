@@ -5,7 +5,7 @@
 
 void UEmptyQuestCondition::StartCondition()
 {
-	// hehehehehehehehehehehhe
+	// heheheheheehehheehhe
 }
 
 void UEmptyQuestCondition::StopCondition()

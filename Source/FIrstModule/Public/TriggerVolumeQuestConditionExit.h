@@ -9,7 +9,7 @@
 /**
  *
  */
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, BlueprintType)
 class FIRSTMODULE_API UTriggerVolumeQuestConditionExit : public UTriggerVolume_QuestCondition
 {
 	GENERATED_BODY()
@@ -18,7 +18,7 @@ public:
 	virtual void StartCondition() override;
 	virtual void StopCondition() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quest|Condition")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bCompleteOnExit = false;
 
 	UFUNCTION()
