@@ -7,6 +7,11 @@
 void UTriggerVolume_QuestCondition::StartCondition()
 {
 	AQuest* Quest = Cast<AQuest>(GetOuter());
+	if (!Quest)
+	{
+		UE_LOG(LogQuest, Error, TEXT("TriggerVolume condition: outer %s is not a Questt"), *GetNameSafe(GetOuter()));
+		return;
+	}
 	Quest->OnActorBeginOverlap.AddDynamic(this, &UTriggerVolume_QuestCondition::StartOverlap);
 }
 

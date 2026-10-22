@@ -42,7 +42,7 @@ void UQuestSystemComponent::GetActiveAndStartedQuests(TArray<AQuest*>& OutQuests
 {
 	for (AQuest* Quest : ActiveQuests)
 	{
-		if (Quest->GetQuestStatus() == EQuestStatus::Started)
+		if (Quest->GetQuestStatus() == EQuestStatus::Started || Quest->GetQuestStatus() == EQuestStatus::Completed)
 		{
 			OutQuests.Add(Quest);
 		}

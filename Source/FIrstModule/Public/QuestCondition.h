@@ -8,7 +8,7 @@
 
 class AActor;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogQuest, Warning, Warning);
+DECLARE_LOG_CATEGORY_EXTERN(LogQuest, Log, All);
 DECLARE_MULTICAST_DELEGATE(FOnQuestConditionCompleted)
 /**
  *

@@ -9,7 +9,7 @@
 class UQuestSettings;
 class UQuestCondition;
 
-UENUM()
+UENUM(BlueprintType)
 enum class EQuestStatus : uint8
 {
 	WaitingForStart,
@@ -28,6 +28,7 @@ public:
 	AQuest();
 	void UpdateStartStatus();
 	void UpdateEndStatus();
+	UFUNCTION(BlueprintPure)
 	EQuestStatus GetQuestStatus() const { return QuestStatus; }
 
 	UPROPERTY(BlueprintAssignable)

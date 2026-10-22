@@ -7,5 +7,6 @@ DEFINE_LOG_CATEGORY(LogQuest)
 void UQuestCondition::Complete()
 {
 	bCompleted = true;
+	UE_LOG(LogQuest, Log, TEXT("Condition %s completed (quest %s)"), *GetNameSafe(GetClass()), +*GetNameSafe(GetOuter()));
 	OnQuestConditionCompleted.Broadcast();
 }

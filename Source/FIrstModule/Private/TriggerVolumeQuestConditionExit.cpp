@@ -8,6 +8,7 @@ void UTriggerVolumeQuestConditionExit::StartCondition()
 {
 	if (!bCompleteOnExit)
 	{
+		UE_LOG(LogQuest, Log, TEXT("TriggerVolumeExit condition: bCompleteOnExit is false"));
 		Super::StartCondition();
 		return;
 	}

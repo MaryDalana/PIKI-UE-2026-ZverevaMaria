@@ -32,9 +32,11 @@ void AQuest::BeginPlay()
 	{
 		if (!ensureMsgf(ConditionTemplate, TEXT("Bad setup for quest %s"), *GetNameSafe(this)))
 		{
+			UE_LOG(LogQuest, Error, TEXT("Quest %s: empty start condition in settings %s"), *GetNameSafe(this), +*GetNameSafe(QuestSettings));
 			return;
 		}
 		UQuestCondition* QuestCondition = DuplicateObject(ConditionTemplate, this);
+		UE_LOG(LogQuest, Log, TEXT("Quest %s: starting start condition %s"), *GetNameSafe(this), +*GetNameSafe(QuestCondition->GetClass()));
 		QuestCondition->StartCondition();
 		QuestCondition->OnQuestConditionCompleted.AddUObject(this, &AQuest::UpdateStartStatus);
 		StartConditions.Add(QuestCondition);
@@ -54,15 +56,17 @@ void AQuest::UpdateStartStatus()
 	{
 		if (!ensure(Condition))
 		{
+			UE_LOG(LogQuest, Error, TEXT("Quest %s: null start condition"), *GetNameSafe(this));
 			return;
 		}
 		if (!Condition->IsCompleted())
 		{
+			UE_LOG(LogQuest, Verbose, TEXT("Quest %s: start condition %s is not completed yet"), *GetNameSafe(this), +*GetNameSafe(Condition->GetClass()));
 			return;
 		}
 	}
 
-	SetQuestStatus(EQuestStatus::Started);
+	QuestStatus = EQuestStatus::Started;
 
 	if (bDebugInstantFinish)
 	{
@@ -70,13 +74,15 @@ void AQuest::UpdateStartStatus()
 		return;
 	}
 
-	for (const UQuestCondition* ConditionTemplate : QuestSettings->StartConditionsInst)
+	for (const UQuestCondition* ConditionTemplate : QuestSettings->EndConditionsInst)
 	{
 		if (!ensureMsgf(ConditionTemplate, TEXT("Bad setup for quest %s"), *GetNameSafe(this)))
 		{
+			UE_LOG(LogQuest, Error, TEXT("Quest %s: empty end condition in settings %s"), *GetNameSafe(this), +*GetNameSafe(QuestSettings));
 			return;
 		}
 		UQuestCondition* QuestCondition = DuplicateObject(ConditionTemplate, this);
+		UE_LOG(LogQuest, Log, TEXT("Quest %s: starting end condition %s"), *GetNameSafe(this), +*GetNameSafe(QuestCondition->GetClass()));
 		QuestCondition->StartCondition();
 		QuestCondition->OnQuestConditionCompleted.AddUObject(this, &AQuest::UpdateEndStatus);
 		EndConditions.Add(QuestCondition);
@@ -97,6 +103,7 @@ void AQuest::UpdateEndStatus()
 			return;
 		}
 	}
-	SetQuestStatus(EQuestStatus::Completed);
+	UE_LOG(LogQuest, Log, TEXT("All conditions completed"));
+	QuestStatus = EQuestStatus::Completed;
 }
 
