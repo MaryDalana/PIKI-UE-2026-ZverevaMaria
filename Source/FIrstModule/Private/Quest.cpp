@@ -7,6 +7,11 @@
 #include "QuestSettings.h"
 #include "QuestCondition.h"
 
+int32 bDebugInstantFinish = 0;
+FAutoConsoleVariableRef CVarDebugInstantFinish(TEXT("quest.InstantFinish"),
+	bDebugInstantFinish, TEXT("Debug Instantly Finish Quests"),
+	ECVF_Cheat);
+
 // Sets default values
 AQuest::AQuest()
 {
@@ -23,13 +28,13 @@ void AQuest::BeginPlay()
 	{
 		QuestComponent->RegisterQuest(this);
 	}
-	for (const TSubclassOf<UQuestCondition>& ConditionTemplate : QuestSettings->StartConditions)
+	for (const UQuestCondition* ConditionTemplate : QuestSettings->StartConditionsInst)
 	{
 		if (!ensureMsgf(ConditionTemplate, TEXT("Bad setup for quest %s"), *GetNameSafe(this)))
 		{
 			return;
 		}
-		UQuestCondition* QuestCondition = NewObject<UQuestCondition>(this, ConditionTemplate);
+		UQuestCondition* QuestCondition = DuplicateObject(ConditionTemplate, this);
 		QuestCondition->StartCondition();
 		QuestCondition->OnQuestConditionCompleted.AddUObject(this, &AQuest::UpdateStartStatus);
 		StartConditions.Add(QuestCondition);
@@ -47,7 +52,7 @@ void AQuest::UpdateStartStatus()
 {
 	for (UQuestCondition* Condition : StartConditions)
 	{
-		if (ensure(Condition))
+		if (!ensure(Condition))
 		{
 			return;
 		}
@@ -56,15 +61,22 @@ void AQuest::UpdateStartStatus()
 			return;
 		}
 	}
+
 	SetQuestStatus(EQuestStatus::Started);
 
-	for (const TSubclassOf<UQuestCondition>& ConditionTemplate : QuestSettings->StartConditions)
+	if (bDebugInstantFinish)
+	{
+		QuestStatus = EQuestStatus::Completed;
+		return;
+	}
+
+	for (const UQuestCondition* ConditionTemplate : QuestSettings->StartConditionsInst)
 	{
 		if (!ensureMsgf(ConditionTemplate, TEXT("Bad setup for quest %s"), *GetNameSafe(this)))
 		{
 			return;
 		}
-		UQuestCondition* QuestCondition = NewObject<UQuestCondition>(this, ConditionTemplate);
+		UQuestCondition* QuestCondition = DuplicateObject(ConditionTemplate, this);
 		QuestCondition->StartCondition();
 		QuestCondition->OnQuestConditionCompleted.AddUObject(this, &AQuest::UpdateEndStatus);
 		EndConditions.Add(QuestCondition);
@@ -88,13 +100,3 @@ void AQuest::UpdateEndStatus()
 	SetQuestStatus(EQuestStatus::Completed);
 }
 
-void AQuest::SetQuestStatus(EQuestStatus NewStatus)
-{
-	if (QuestStatus == NewStatus)
-	{
-		return;
-	}
-	const EQuestStatus OldStatus = QuestStatus;
-	QuestStatus = NewStatus;
-	OnQuestStatusChanged.Broadcast(OldStatus, NewStatus);
-}

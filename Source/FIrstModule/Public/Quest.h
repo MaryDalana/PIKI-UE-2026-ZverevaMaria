@@ -16,6 +16,7 @@ enum class EQuestStatus : uint8
 	Started,
 	Completed
 };
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestStatusChanged, EQuestStatus, OldStatus, EQuestStatus, NewStatus);
 UCLASS()
 class FIRSTMODULE_API AQuest : public AActor
@@ -41,7 +42,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UQuestSettings> QuestSettings;
 
 	UPROPERTY()

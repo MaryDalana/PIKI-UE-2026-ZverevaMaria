@@ -17,6 +17,13 @@ void UTriggerVolume_QuestCondition::StopCondition()
 
 void UTriggerVolume_QuestCondition::StartOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
+	UE_LOG(LogQuest, Log, TEXT("Quest Condition Overlaped with actor %s with has tag %s"), *OtherActor->GetName(),
+		OtherActor->ActorHasTag(OtherTag) ? TEXT("has tag") : TEXT("no tag"));
+	AQuest* Quest = Cast<AQuest>(GetOuter());
+	FVector Center;
+	FVector Extents;
+	Quest->GetActorBounds(true, Center, Extents, false);
+	UE_VLOG_BOX(Quest, LogQuest, Error, FBox(Center - Extents, Center + Extents), FColor::Orange, TEXT(""));
 	if (OtherActor->ActorHasTag(OtherTag))
 	{
 		Complete();

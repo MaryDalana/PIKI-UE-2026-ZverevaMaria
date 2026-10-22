@@ -16,10 +16,19 @@ class FIRSTMODULE_API UQuestSettings : public UDataAsset
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText Name;
+	/*UPROPERTY(Instanced, EditAnywhere)
+	TArray<TObjectPtr<UQuestCondition>> StartConditionsDirect;*/
 	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<UQuestCondition>> StartConditions;
+	TArray<TObjectPtr<UQuestCondition>> StartConditionsInst;
 	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<UQuestCondition>> EndConditions;
+	TArray<TObjectPtr<UQuestCondition>> EndConditionsInst;
+
+	UPROPERTY()
+	TArray<TSubclassOf<UQuestCondition>> StartConditions_DEPRECATED;
+	UPROPERTY()
+	TArray<TSubclassOf<UQuestCondition>> EndConditions_DEPRECATED;
+
+	virtual void PostLoad();
 };

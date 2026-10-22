@@ -8,11 +8,12 @@
 
 class AActor;
 
+DECLARE_LOG_CATEGORY_EXTERN(LogQuest, Warning, Warning);
 DECLARE_MULTICAST_DELEGATE(FOnQuestConditionCompleted)
 /**
  *
  */
-UCLASS(Abstract, Blueprintable, BlueprintType)
+UCLASS(Abstract, Blueprintable, BlueprintType, EditInlineNew)
 class FIRSTMODULE_API UQuestCondition : public UObject
 {
 	GENERATED_BODY()
